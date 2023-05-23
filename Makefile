@@ -6,9 +6,6 @@ OUTPUT = main
 # Список исходных файлов
 SOURCES = main.py intro.py take_matches.py switch_player.py result.py
 
-# Определение объектных файлов
-OBJECTS = $(SOURCES:.py=.pyc)
-
 # Правило по умолчанию
 all: $(OUTPUT)
 
