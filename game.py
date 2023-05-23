@@ -8,7 +8,7 @@ def play_game():
         print("Спичек на столе:", matches)
         print("Ход игрока", current_player)
 
-        num_matches = get_valid_input(matches)
+        num_matches = get_valid_input(matches)#правильный ввод игрока
 
         matches -= num_matches
 
