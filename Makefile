@@ -2,8 +2,8 @@
 
 PYTHON = python3
 
-all: game
+all: main
 
-game: game.py welcome.py input.py player.py
+game: main.py welcome.py input.py player.py
 	$(PYTHON) game.py
 
