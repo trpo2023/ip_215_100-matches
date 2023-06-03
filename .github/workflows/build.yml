@@ -1,4 +1,4 @@
-name: build
+name: Build
 
 on:
   push:
@@ -13,22 +13,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: "3.x"
-
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install dependencies
+      - name: Set up build environment
         run: |
-          pip install pyyaml
+          sudo apt-get install -y build-essential
 
       - name: Build
         run: |
-          python build.py
+          make all
 
       - name: Test
         run: |
-          python build.py test
+          make test
