@@ -2,8 +2,8 @@ import borders
 import unittest
 
 
-class LogicTests(unittest.TestCase):
-    def test_check_inputNum(self):
+class BordTests(unittest.TestCase):
+    def test_inputNum(self):
         inputNum = 0
         self.assertFalse(borders.inputNum(inputNum))
 
@@ -16,7 +16,7 @@ class LogicTests(unittest.TestCase):
         inputNum = 10
         self.assertTrue(borders.inputNum(inputNum))
 
-    def test_check_inputNum2(self):
+    def test_inputNum2(self):
         inputNum = 5
         count = 4
         self.assertFalse(borders.inputNum2(inputNum, count))
@@ -33,7 +33,7 @@ class LogicTests(unittest.TestCase):
         count = 26
         self.assertTrue(borders.inputNum2(inputNum, count))
 
-    def test_check_compNum(self):
+    def test_compNum(self):
         compNum = 9
         count = 4
         self.assertFalse(borders.pcNum(compNum, count))
