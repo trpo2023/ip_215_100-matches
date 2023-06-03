@@ -1,5 +1,5 @@
 import random
-from logic import inputNum, inputNum2, pcNum
+from borders import inputNum, inputNum2, pcNum
 
 
 def print_welcome_message():
