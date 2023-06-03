@@ -1,5 +1,5 @@
 	import os
-	import glob
+import glob
 
 APP_NAME = "matches"
 APP_TEST_NAME = "matchestest"
