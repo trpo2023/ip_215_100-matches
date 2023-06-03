@@ -2,7 +2,6 @@
 	import glob
 
 APP_NAME = "matches"
-LIB_NAME = "libmatches"
 APP_TEST_NAME = "matchestest"
 
 CFLAGS = "-Wall -Wextra -Werror"
@@ -15,7 +14,7 @@ SRC_DIR = "src"
 TEST_DIR = "test"
 
 APP_PATH = os.path.join(BIN_DIR, APP_NAME)
-LIB_PATH = os.path.join(OBJ_DIR, SRC_DIR, LIB_NAME, LIB_NAME + ".a")
+LIB_PATH = os.path.join(OBJ_DIR, SRC_DIR, LIB_NAME + ".a")
 TEST_PATH = os.path.join(BIN_DIR, TEST_DIR, APP_TEST_NAME)
 
 SRC_EXT = "c"
@@ -25,7 +24,7 @@ APP_OBJECTS = [os.path.join(OBJ_DIR, src.replace(SRC_DIR, "") + ".o") for src in
 APP_TEST_SOURCES = glob.glob(os.path.join(TEST_DIR, f"*.{SRC_EXT}"))
 APP_TEST_OBJECTS = [os.path.join(OBJ_DIR, src.replace(TEST_DIR, "") + ".o") for src in APP_TEST_SOURCES]
 
-LIB_SOURCES = glob.glob(os.path.join(SRC_DIR, LIB_NAME, f"*.{SRC_EXT}"))
+LIB_SOURCES = glob.glob(os.path.join(SRC_DIR, f"*.{SRC_EXT}"))
 LIB_OBJECTS = [os.path.join(OBJ_DIR, src.replace(SRC_DIR, "") + ".o") for src in LIB_SOURCES]
 
 DEPS = [obj.replace(".o", ".d") for obj in APP_OBJECTS + LIB_OBJECTS]
