@@ -7,13 +7,13 @@ class BordTests(unittest.TestCase):
         inputNum = 0
         self.assertFalse(borders.inputNum(inputNum))
 
-        inputNum = 11
+        inputNum = 14
         self.assertFalse(borders.inputNum(inputNum))
 
         inputNum = 7
         self.assertTrue(borders.inputNum(inputNum))
 
-        inputNum = 10
+        inputNum = 5
         self.assertTrue(borders.inputNum(inputNum))
 
     def test_inputNum2(self):
@@ -30,25 +30,25 @@ class BordTests(unittest.TestCase):
         self.assertTrue(borders.inputNum2(inputNum, count))
 
         inputNum = 9
-        count = 26
+        count = 55
         self.assertTrue(borders.inputNum2(inputNum, count))
 
-    def test_compNum(self):
-        compNum = 9
+    def test_pcNum(self):
+        pcNum = 9
         count = 4
-        self.assertFalse(borders.pcNum(compNum, count))
+        self.assertFalse(borders.pcNum(pcNum, count))
 
-        compNum = 7
+        pcNum = 9
         count = 6
-        self.assertFalse(borders.pcNum(compNum, count))
+        self.assertFalse(borders.pcNum(pcNum, count))
 
-        compNum = 3
+        pcNum = 3
         count = 6
-        self.assertTrue(borders.pcNum(compNum, count))
+        self.assertTrue(borders.pcNum(pcNum, count))
 
-        compNum = 7
-        count = 15
-        self.assertTrue(borders.pcNum(compNum, count))
+        pcNum = 1
+        count = 19
+        self.assertTrue(borders.pcNum(pcNum, count))
 
 
 if __name__ == "__main__":
