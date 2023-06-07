@@ -1,25 +1,24 @@
-name: Build and Test
+name: Build
 
 on:
   push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     steps:
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.x
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-    - name: Install dependencies
-      run: pip install -r requirements.txt
+    - name: Build test
+      run: |
+        make test
 
-    - name: Run tests
-      run: pytest
+    - name: Run test
+      run: |
+        ./bin/test/matchestest
+
+    - name: Build application
+      run: |
+        make
