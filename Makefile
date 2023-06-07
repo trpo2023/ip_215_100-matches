@@ -26,27 +26,27 @@ def prepare():
 		os.makedirs(os.path.join(".", BUILD_DIR, TEST_OUT_NAME), exist_ok=True)
 		os.makedirs(os.path.join(".", OBJ_DIR, TEST_OUT_NAME), exist_ok=True)
 
-def build_executable():
-	os.system("%s %s -o %s %s -I %s -L %s -lmatches" % (CC, CFLAGS, EXECUTABLE, " ".join([MAIN_OBJ, LIB_OBJ]), SRC_DIR, BUILD_DIR))
-
-def build_library():
-		os.system("ar rcs %s %s" % (os.path.join(BUILD_DIR, LIBRARY), LIB_OBJ))
-
-def build_test():
-		os.system("%s %s %s -I%s -I%s -L%s -lmatches -w -o %s" % (CC, " ".join(TEST_OBJECTS), THIRDPARTY_DIR, SRC_DIR, BUILD_DIR, os.path.join(BUILD_DIR, TEST_OUT_NAME, TEST_OUT_NAME)))
-
 def compile_lib_obj():
 		os.system("%s %s -c %s -o %s" % (CC, CFLAGS, LIB_SRC, LIB_OBJ))
 
 def compile_main_obj():
 		os.system("%s %s -c %s -o %s -I %s" % (CC, CFLAGS, MAIN_SRC, MAIN_OBJ, SRC_DIR))
 
+def build_library():
+		os.system("ar rcs %s %s" % (os.path.join(BUILD_DIR, LIBRARY), LIB_OBJ))
+
+def build_executable():
+		os.system("%s %s -o %s %s -I %s -L %s -lmatches" % (CC, CFLAGS, EXECUTABLE, " ".join([MAIN_OBJ, LIB_OBJ]), SRC_DIR, BUILD_DIR))
+
 def compile_test_objs():
     for test_file in os.listdir(TEST_SRC_DIR):
         if test_file.endswith(".c"):
             test_src = os.path.join(TEST_SRC_DIR, test_file)
             test_obj = os.path.join(TEST_OBJ_DIR, "%s.o" % os.path.splitext(test_file)[0])
-				os.system("%s -I%s -I%s -L%s -lmatches -c %s -w -o %s" % (CC, THIRDPARTY_DIR, SRC_DIR, BUILD_DIR, test_src, test_obj))
+				os.system("%s -I %s -I %s -L %s -lmatches -c %s -w -o %s" % (CC, THIRDPARTY_DIR, SRC_DIR, BUILD_DIR, test_src, test_obj))
+
+def build_test():
+		os.system("%s %s %s -I %s -I %s -L %s -lmatches -w -o %s" % (CC, " ".join(TEST_OBJECTS), THIRDPARTY_DIR, SRC_DIR, BUILD_DIR, os.path.join(BUILD_DIR, TEST_OUT_NAME, TEST_OUT_NAME)))
 
 def clean():
 		os.system("rm -f -r %s/*.o %s %s %s" % (OBJ_DIR, LIBRARY, EXECUTABLE, BUILD_DIR))
