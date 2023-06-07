@@ -1,16 +1,6 @@
-.PHONY: all clean
+run:
+	python main.py
 
-# Имя результирующего файла
-OUTPUT = main
-
-all: main test
-
-main:
-	$(PYTHON) $(MAIN)
 
 test:
-	$(PYTHON) $(TEST)
-
-clean:
-	rm -f *.pyc
-
+	python test.py
