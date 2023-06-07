@@ -1,67 +1,67 @@
 	import os
-	import glob
 
-APP_NAME = "matches"
-APP_TEST_NAME = "matchestest"
-
-CFLAGS = "-Wall -Wextra -Werror"
-CPPFLAGS = "-I thirdparty -I src -MP -MMD"
-GDB = "-g -O0"
-
-BIN_DIR = "bin"
-OBJ_DIR = "obj"
+CC = "gcc"
+CFLAGS = "-Wall -Wextra -Wpedantic"
+LIBRARY = "libmatches.a"
 SRC_DIR = "src"
-TEST_DIR = "test"
+OBJ_DIR = "obj"
+BUILD_DIR = "build"
 
-APP_PATH = os.path.join(BIN_DIR, APP_NAME)
-LIB_PATH = os.path.join(OBJ_DIR, SRC_DIR, LIB_NAME + ".a")
-TEST_PATH = os.path.join(BIN_DIR, TEST_DIR, APP_TEST_NAME)
+LIB_SRC = os.path.join(SRC_DIR, "lib", "matches_game.c")
+MAIN_SRC = os.path.join(SRC_DIR, "main.c")
 
-SRC_EXT = "c"
+LIB_OBJ = os.path.join(OBJ_DIR, "%s.o" % os.path.splitext(os.path.basename(LIB_SRC))[0])
+MAIN_OBJ = os.path.join(OBJ_DIR, "%s.o" % os.path.splitext(os.path.basename(MAIN_SRC))[0])
 
-APP_SOURCES = glob.glob(os.path.join(SRC_DIR, APP_NAME, f"*.{SRC_EXT}"))
-APP_OBJECTS = [os.path.join(OBJ_DIR, src.replace(SRC_DIR, "") + ".o") for src in APP_SOURCES]
-APP_TEST_SOURCES = glob.glob(os.path.join(TEST_DIR, f"*.{SRC_EXT}"))
-APP_TEST_OBJECTS = [os.path.join(OBJ_DIR, src.replace(TEST_DIR, "") + ".o") for src in APP_TEST_SOURCES]
+EXECUTABLE = os.path.join(BUILD_DIR, "game")
 
-LIB_SOURCES = glob.glob(os.path.join(SRC_DIR, f"*.{SRC_EXT}"))
-LIB_OBJECTS = [os.path.join(OBJ_DIR, src.replace(SRC_DIR, "") + ".o") for src in LIB_SOURCES]
+THIRDPARTY_DIR = "thirdparty"
 
-DEPS = [obj.replace(".o", ".d") for obj in APP_OBJECTS + LIB_OBJECTS]
+TEST_SRC_DIR = "test"
+TEST_OUT_NAME = "matches-test"
+TEST_OBJ_DIR = os.path.join(OBJ_DIR, TEST_OUT_NAME)
+TEST_OBJECTS = [os.path.join(TEST_OBJ_DIR, "ctest.o"), os.path.join(TEST_OBJ_DIR, "main.o")]
 
-def execute_command(command):
-		print(command)
-		os.system(command)
+def prepare():
+		os.makedirs(os.path.join(".", BUILD_DIR, TEST_OUT_NAME), exist_ok=True)
+		os.makedirs(os.path.join(".", OBJ_DIR, TEST_OUT_NAME), exist_ok=True)
 
-def create_directory(directory):
-    if not os.path.exists(directory):
-			os.makedirs(directory)
+def build_executable():
+	os.system("%s %s -o %s %s -I %s -L %s -lmatches" % (CC, CFLAGS, EXECUTABLE, " ".join([MAIN_OBJ, LIB_OBJ]), SRC_DIR, BUILD_DIR))
 
-def build_target(target, objects, additional_flags=""):
-    command = f"gcc {CFLAGS} {GDB} {CPPFLAGS} {additional_flags} {' '.join(objects)} -o {target} -lm"
-		execute_command(command)
+def build_library():
+		os.system("ar rcs %s %s" % (os.path.join(BUILD_DIR, LIBRARY), LIB_OBJ))
 
-def compile_source(source, object_file, additional_flags=""):
-    command = f"gcc -c {CFLAGS} {GDB} {CPPFLAGS} {additional_flags} {source} -o {object_file}"
-		execute_command(command)
+def build_test():
+		os.system("%s %s %s -I%s -I%s -L%s -lmatches -w -o %s" % (CC, " ".join(TEST_OBJECTS), THIRDPARTY_DIR, SRC_DIR, BUILD_DIR, os.path.join(BUILD_DIR, TEST_OUT_NAME, TEST_OUT_NAME)))
+
+def compile_lib_obj():
+		os.system("%s %s -c %s -o %s" % (CC, CFLAGS, LIB_SRC, LIB_OBJ))
+
+def compile_main_obj():
+		os.system("%s %s -c %s -o %s -I %s" % (CC, CFLAGS, MAIN_SRC, MAIN_OBJ, SRC_DIR))
+
+def compile_test_objs():
+    for test_file in os.listdir(TEST_SRC_DIR):
+        if test_file.endswith(".c"):
+            test_src = os.path.join(TEST_SRC_DIR, test_file)
+            test_obj = os.path.join(TEST_OBJ_DIR, "%s.o" % os.path.splitext(test_file)[0])
+				os.system("%s -I%s -I%s -L%s -lmatches -c %s -w -o %s" % (CC, THIRDPARTY_DIR, SRC_DIR, BUILD_DIR, test_src, test_obj))
 
 def clean():
-		execute_command(f"rm -f {APP_PATH} {LIB_PATH} {TEST_PATH}")
-		execute_command(f"find {OBJ_DIR} -name '*.o' -exec rm -f {{}} \;")
-		execute_command(f"find {OBJ_DIR} -name '*.d' -exec rm -f {{}} \;")
+		os.system("rm -f -r %s/*.o %s %s %s" % (OBJ_DIR, LIBRARY, EXECUTABLE, BUILD_DIR))
 
-def all():
-		create_directory(BIN_DIR)
-		create_directory(OBJ_DIR)
-		create_directory(os.path.join(OBJ_DIR, SRC_DIR, LIB_NAME))
-
-		build_target(APP_PATH, APP_OBJECTS + [LIB_PATH])
+def run():
+		os.system("./%s" % EXECUTABLE)
 
 def test():
-	create_directory(BIN_DIR)
-	create_directory(OBJ_DIR)
-	create_directory(os.path.join(OBJ_DIR, TEST_DIR))
-	build_target(TEST_PATH, APP_TEST_OBJECTS + [LIB_PATH])
+		os.system("./%s" % os.path.join(BUILD_DIR, TEST_OUT_NAME, TEST_OUT_NAME))
 
 if __name__ == "__main__":
-		all()
+		prepare()
+		compile_lib_obj()
+		compile_main_obj()
+		build_library()
+		build_executable()
+		compile_test_objs()
+		build_test()
