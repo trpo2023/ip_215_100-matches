@@ -17,7 +17,7 @@ jobs:
 
     - name: Run test
       run: |
-        ./bin/test/matchestest
+        ./bin/test/test_borders
 
     - name: Build application
       run: |
