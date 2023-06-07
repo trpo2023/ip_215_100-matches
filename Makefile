@@ -1,35 +1,30 @@
-name: Build
+# Компилятор и флаги
+CC = gcc
+CFLAGS = -Wall -Wextra
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+# Имена исполняемого файла и библиотеки
+EXECUTABLE = matches_game
+LIBRARY = libgame.so
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+# Основная цель: сборка исполняемого файла
+all: $(EXECUTABLE)
 
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+# Сборка исполняемого файла
+$(EXECUTABLE): main.o $(LIBRARY)
+	$(CC) $(CFLAGS) -o $@ $< -L. -lgame
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.9
+# Сборка объектного файла main.o
+main.o: main.c game.h
+	$(CC) $(CFLAGS) -c $<
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
+# Сборка библиотеки
+$(LIBRARY): game.o
+	$(CC) $(CFLAGS) -shared -o $@ $<
 
-    - name: Build
-      run: |
-        make all
+# Сборка объектного файла game.o
+game.o: game.c game.h
+	$(CC) $(CFLAGS) -fPIC -c $<
 
-    - name: Test
-      run: |
-        make test
+# Очистка собранных файлов
+clean:
+	rm -f $(EXECUTABLE) $(LIBRARY) *.o
