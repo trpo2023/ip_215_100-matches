@@ -1,21 +1,35 @@
-# Настройки компиляции и исполнения
-PYTHON = python3
-MAIN_FILE = main.py
+name: Build
 
-# Цель по умолчанию
-all: run
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
-# Сборка и запуск программы
-run:
-	$(PYTHON) $(MAIN_FILE)
+jobs:
+  build:
+    runs-on: ubuntu-latest
 
-# Тестирование
-test:
-	$(PYTHON) -m unittest discover tests
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
-# Очистка сгенерированных файлов
-clean:
-	rm -rf __pycache__ *.pyc
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
 
-# Правило .PHONY для целей, которые не являются файлами
-.PHONY: all run test clean
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Build
+      run: |
+        make all
+
+    - name: Test
+      run: |
+        make test
