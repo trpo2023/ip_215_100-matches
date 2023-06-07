@@ -1,9 +1,7 @@
 .PHONY: all clean
 
-PYTHON := python3
-MAIN := main.py
-LIB := matches_game.py
-TEST := test.py
+# Имя результирующего файла
+OUTPUT = main
 
 all: main test
 
