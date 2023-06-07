@@ -1,30 +1,12 @@
-# Компилятор и флаги
-CC = gcc
-CFLAGS = -Wall -Wextra
+.PHONY: all run test clean
 
-# Имена исполняемого файла и библиотеки
-EXECUTABLE = matches_game
-LIBRARY = libgame.so
+all: run
 
-# Основная цель: сборка исполняемого файла
-all: $(EXECUTABLE)
+run:
+    python main.py
 
-# Сборка исполняемого файла
-$(EXECUTABLE): main.o $(LIBRARY)
-	$(CC) $(CFLAGS) -o $@ $< -L. -lgame
+test:
+    python -m unittest discover -s test -p '*_test.py'
 
-# Сборка объектного файла main.o
-main.o: main.c game.h
-	$(CC) $(CFLAGS) -c $<
-
-# Сборка библиотеки
-$(LIBRARY): game.o
-	$(CC) $(CFLAGS) -shared -o $@ $<
-
-# Сборка объектного файла game.o
-game.o: game.c game.h
-	$(CC) $(CFLAGS) -fPIC -c $<
-
-# Очистка собранных файлов
 clean:
-	rm -f $(EXECUTABLE) $(LIBRARY) *.o
+    rm -rf __pycache__
